@@ -3,51 +3,172 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agendar Cita - Barbería</title>
+  <title>Agendar Cita — Dorado Barber</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 30px; background: #f4f4f4; }
-    form { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin-bottom: 20px; }
-    input, select { width: 100%; margin: 8px 0; padding: 10px; border-radius: 4px; border: 1px solid #ccc; }
-    button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
-    .horario { padding: 8px; border-radius: 4px; margin: 4px 0; cursor: pointer; border: 1px solid #ddd; }
-    .ocupado { background: #f8d7da; color: #721c24; cursor: not-allowed; }
-    .libre { background: #d4edda; color: #155724; }
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-image: radial-gradient(circle at top center, #111 0%, #000 80%);
+    }
+
+    .container {
+      background-color: #111;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .container:hover {
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.35);
+    }
+
+    h1 {
+      color: gold;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-top: 15px;
+      font-weight: 500;
+      color: #ddd;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 8px;
+      background-color: #222;
+      color: #fff;
+      font-size: 1em;
+      box-shadow: inset 0 0 5px rgba(255, 215, 0, 0.2);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    #listaHorarios {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .horario {
+      background-color: #1a1a1a;
+      border: 1px solid #333;
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin: 6px 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .horario.libre:hover {
+      background-color: rgba(255, 215, 0, 0.1);
+      border-color: gold;
+    }
+
+    .horario.ocupado {
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    .boton {
+      background: linear-gradient(90deg, gold, #d4af37);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      color: #000;
+      font-weight: bold;
+      font-size: 1em;
+      margin-top: 20px;
+      width: 100%;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .boton:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #aaa;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+    }
   </style>
 </head>
-
 <body>
-  <h1>Agenda tu cita 💈</h1>
+  <div class="container">
+    <h1>💈 Agendar Cita</h1>
 
-  <form id="formCita">
-    <input type="text" id="nombre" placeholder="Tu nombre" required />
-    <input type="tel" id="telefono" placeholder="Teléfono" required />
-    
-    <select id="servicio" required>
-      <option value="">Selecciona un servicio</option>
-      <option value="Corte sin barba">Corte sin barba</option>
-      <option value="Corte con barba">Corte con barba</option>
-      <option value="Barba sola">Barba sola</option>
-      <option value="Tinte">Tinte</option>
-      <option value="Peinado">Peinado</option>
-    </select>
+    <form id="formCita">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" required />
 
-    <input type="text" id="precio" placeholder="Precio ($)" readonly />
+      <label for="telefono">Teléfono</label>
+      <input type="tel" id="telefono" required />
 
-    <input type="date" id="fecha" required />
+      <label for="servicio">Servicio</label>
+      <select id="servicio" required>
+        <option value="">Seleccione un servicio</option>
+        <option value="Corte sin barba">Corte sin barba</option>
+        <option value="Corte con barba">Corte con barba</option>
+        <option value="Barba sola">Barba sola</option>
+        <option value="Tinte">Tinte</option>
+        <option value="Peinado">Peinado</option>
+      </select>
 
-    <button type="submit">Agendar</button>
-  </form>
+      <label for="precio">Precio</label>
+      <input type="text" id="precio" readonly />
 
-  <div id="listaHorarios"></div>
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" required />
 
-  <!-- 👇 Pega tu script AQUÍ, al final del body -->
+      <div id="listaHorarios">
+        <h3>Selecciona un horario:</h3>
+      </div>
+
+      <button type="submit" class="boton">💾 Guardar cita</button>
+    </form>
+
+    <footer>© Dorado Barber — Agenda online</footer>
+  </div>
+
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
     const SUPABASE_URL = "https://vukawliizqcjhptpyxdi.supabase.co";
     const SUPABASE_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1a2F3bGlpenFjamhwdHB5eGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTEwMzksImV4cCI6MjA3Njg4NzAzOX0.XhH_NEwxiEaYqS4vZiWm4DjSXQ1bLZkMtdB0g8ewNtM";
-
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const precios = {
@@ -60,13 +181,13 @@
 
     let horaSeleccionada = "";
 
-    // === Actualiza el precio ===
     document.getElementById("servicio").addEventListener("change", () => {
       const servicio = document.getElementById("servicio").value;
-      document.getElementById("precio").value = precios[servicio] || "";
+      document.getElementById("precio").value = precios[servicio]
+        ? `$${precios[servicio]}`
+        : "";
     });
 
-    // === Carga los horarios disponibles ===
     document.getElementById("fecha").addEventListener("change", async () => {
       const fecha = document.getElementById("fecha").value;
       if (!fecha) return;
@@ -77,8 +198,8 @@
         .eq("fecha", fecha);
 
       if (error) {
-        console.error("Error al cargar horarios:", error);
         alert("Error al cargar los horarios.");
+        console.error(error);
         return;
       }
 
@@ -101,41 +222,43 @@
       }
     });
 
-    // === Seleccionar hora libre ===
     function seleccionarHora(hora, div) {
       horaSeleccionada = hora;
       document
         .querySelectorAll(".libre")
-        .forEach((el) => (el.style.border = "1px solid #ddd"));
-      div.style.border = "2px solid green";
+        .forEach((el) => (el.style.border = "1px solid #333"));
+      div.style.border = "2px solid gold";
+      div.style.backgroundColor = "rgba(255, 215, 0, 0.1)";
     }
 
-    // === Guardar cita ===
-    const form = document.getElementById("formCita");
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (!horaSeleccionada) return alert("Selecciona un horario libre");
+    document
+      .getElementById("formCita")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!horaSeleccionada) return alert("Selecciona un horario libre");
 
-      const datos = {
-        nombre: document.getElementById("nombre").value,
-        telefono: document.getElementById("telefono").value,
-        servicio: document.getElementById("servicio").value,
-        fecha: document.getElementById("fecha").value,
-        hora: horaSeleccionada,
-        precio: parseFloat(document.getElementById("precio").value || 0),
-      };
+        const datos = {
+          nombre: document.getElementById("nombre").value,
+          telefono: document.getElementById("telefono").value,
+          servicio: document.getElementById("servicio").value,
+          fecha: document.getElementById("fecha").value,
+          hora: horaSeleccionada,
+          precio: parseFloat(
+            document.getElementById("precio").value.replace("$", "") || 0
+          ),
+        };
 
-      const { error } = await supabase.from("citas").insert([datos]);
+        const { error } = await supabase.from("citas").insert([datos]);
 
-      if (error) {
-        console.error("❌ Error al guardar cita:", error);
-        alert("❌ Error al guardar la cita. Revisa la consola.");
-      } else {
-        alert("✅ Cita agendada con éxito!");
-        form.reset();
-        document.getElementById("listaHorarios").innerHTML = "";
-      }
-    });
+        if (error) {
+          alert("❌ Error al guardar la cita");
+          console.error(error);
+        } else {
+          alert("✅ Turno agendado con éxito!");
+          e.target.reset();
+          document.getElementById("listaHorarios").innerHTML = "";
+        }
+      });
   </script>
 </body>
 </html>
