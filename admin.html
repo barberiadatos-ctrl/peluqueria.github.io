@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panel del Peluquero 💈</title>
+  <title>Panel del Peluquero</title>
   <style>
     body {
       font-family: "Poppins", sans-serif;
@@ -11,113 +11,136 @@
       color: #fff;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    header {
-      background-color: #111;
-      color: #d4af37;
       text-align: center;
-      padding: 20px;
-      width: 100%;
-      font-size: 1.4em;
-      font-weight: bold;
-      letter-spacing: 1px;
-      box-shadow: 0 2px 6px rgba(212, 175, 55, 0.3);
     }
 
-    .contenedor {
-      width: 95%;
-      max-width: 900px;
-      background-color: #111;
-      border: 1px solid #d4af37;
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 20px;
-      box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
-      overflow-x: auto; /* ✅ Permite desplazarse horizontalmente en móvil */
+    h1 {
+      color: gold;
+      margin-top: 30px;
+      font-size: 2em;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+
+    button {
+      background-color: gold;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 20px 0;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #d4af37;
+      transform: scale(1.05);
+    }
+
+    .tabla-container {
+      width: 90%;
+      margin: auto;
+      overflow-x: auto;
+      background: #111;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 700px; /* ✅ Asegura estructura pero deja scroll si es más pequeña la pantalla */
+      margin: 20px 0;
+      font-size: 0.95em;
+      min-width: 600px;
     }
 
     th, td {
-      padding: 12px 10px;
-      text-align: left;
-      border-bottom: 1px solid #333;
-    }
-
-    th {
-      background-color: #d4af37;
-      color: #000;
-      font-weight: bold;
-      text-transform: uppercase;
-      font-size: 0.9em;
-    }
-
-    tr:hover {
-      background-color: rgba(212, 175, 55, 0.1);
-    }
-
-    td {
-      color: #fff;
-    }
-
-    .fecha {
+      padding: 12px 15px;
       text-align: center;
-      margin-bottom: 15px;
     }
 
-    input[type="date"] {
-      background-color: #000;
-      color: #d4af37;
-      border: 1px solid #d4af37;
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 1em;
+    thead {
+      background-color: gold;
+      color: black;
+      font-weight: bold;
     }
 
-    @media (max-width: 600px) {
-      header {
-        font-size: 1.2em;
-        padding: 15px;
+    tbody tr:nth-child(even) {
+      background-color: #1a1a1a;
+    }
+
+    tbody tr:hover {
+      background-color: #333;
+    }
+
+    tfoot {
+      font-size: 0.8em;
+      color: #ccc;
+      margin-top: 10px;
+    }
+
+    /* 📱 Responsive ajustes */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.6em;
+      }
+
+      button {
+        width: 80%;
+        font-size: 0.9em;
+        padding: 8px 15px;
+      }
+
+      .tabla-container {
+        width: 95%;
+      }
+
+      table {
+        min-width: 500px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.4em;
+      }
+
+      table {
+        font-size: 0.85em;
+        min-width: 400px;
       }
 
       th, td {
-        padding: 8px;
-        font-size: 0.9em;
+        padding: 8px 10px;
       }
     }
   </style>
 </head>
 <body>
-  <header>Panel de Citas 💈</header>
+  <h1>📋 Panel del Peluquero</h1>
 
-  <div class="fecha">
-    <label for="fecha">📅 Selecciona una fecha:</label>
-    <input type="date" id="fecha" />
-  </div>
+  <button onclick="cargarCitas()">🔄 Actualizar citas</button>
 
-  <div class="contenedor">
+  <div class="tabla-container">
     <table id="tablaCitas">
       <thead>
         <tr>
-          <th>Nombre</th>
-          <th>Teléfono</th>
-          <th>Servicio</th>
-          <th>Hora</th>
-          <th>Precio</th>
+          <th>CLIENTE</th>
+          <th>TELÉFONO</th>
+          <th>SERVICIO</th>
+          <th>FECHA</th>
+          <th>HORA</th>
+          <th>PRECIO</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
   </div>
+
+  <footer>
+    <p>💈 Estilo Dorado Barber — Panel de administración</p>
+  </footer>
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -125,32 +148,26 @@
     const SUPABASE_URL = "https://vukawliizqcjhptpyxdi.supabase.co";
     const SUPABASE_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1a2F3bGlpenFjamhwdHB5eGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTEwMzksImV4cCI6MjA3Njg4NzAzOX0.XhH_NEwxiEaYqS4vZiWm4DjSXQ1bLZkMtdB0g8ewNtM";
-
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-    const fechaInput = document.getElementById("fecha");
-    const tablaBody = document.querySelector("#tablaCitas tbody");
 
-    fechaInput.addEventListener("change", async () => {
-      const fecha = fechaInput.value;
-      if (!fecha) return;
+    async function cargarCitas() {
+      const tablaBody = document.querySelector("#tablaCitas tbody");
+      tablaBody.innerHTML = "<tr><td colspan='6'>Cargando...</td></tr>";
 
       const { data: citas, error } = await supabase
         .from("citas")
         .select("*")
-        .eq("fecha", fecha)
+        .order("fecha", { ascending: true })
         .order("hora", { ascending: true });
 
       if (error) {
-        console.error("Error al cargar citas:", error);
-        alert("No se pudieron cargar las citas.");
+        tablaBody.innerHTML =
+          "<tr><td colspan='6'>❌ Error al cargar las citas.</td></tr>";
+        console.error(error);
         return;
       }
 
       tablaBody.innerHTML = "";
-      if (!citas.length) {
-        tablaBody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#d4af37;">No hay citas para esta fecha</td></tr>`;
-        return;
-      }
 
       citas.forEach((cita) => {
         const fila = `
@@ -158,13 +175,15 @@
             <td>${cita.nombre}</td>
             <td>${cita.telefono}</td>
             <td>${cita.servicio}</td>
+            <td>${cita.fecha}</td>
             <td>${cita.hora}</td>
             <td>$${cita.precio}</td>
-          </tr>
-        `;
+          </tr>`;
         tablaBody.innerHTML += fila;
       });
-    });
+    }
+
+    cargarCitas();
   </script>
 </body>
 </html>
