@@ -1,144 +1,100 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agendar cita | Barbería</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; background: #fafafa; }
-    h2 { text-align: center; margin-bottom: 20px; }
-    label { display: block; margin-top: 10px; font-weight: bold; }
-    input, select, button {
-      width: 100%; padding: 10px; margin-top: 5px;
-      border-radius: 8px; border: 1px solid #ccc; font-size: 16px;
-    }
-    button {
-      background: #2c7be5; color: white; font-weight: bold;
-      cursor: pointer; margin-top: 15px;
-    }
-    button:hover { background: #1a68d1; }
-    .horario {
-      display: flex; justify-content: space-between;
-      margin: 5px 0; padding: 8px; border: 1px solid #ddd;
-      border-radius: 6px; transition: 0.2s;
-    }
-    .ocupado { background: #f8d7da; color: #721c24; }
-    .libre { background: #d4edda; color: #155724; cursor: pointer; }
-    .libre:hover { background: #c3e6cb; }
-  </style>
-</head>
-<body>
+<script type="module">
+  // Importamos la librería de Supabase
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-<h2>💈 Agendar cita</h2>
+  // 🔗 Conexión a tu proyecto Supabase
+  const SUPABASE_URL = "https://vukawliizqcjhptpyxdi.supabase.co";
+  const SUPABASE_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1a2F3bGlpenFjamhwdHB5eGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTEwMzksImV4cCI6MjA3Njg4NzAzOX0.XhH_NEwxiEaYqS4vZiWm4DjSXQ1bLZkMtdB0g8ewNtM";
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-<form id="formCita">
-  <label>Nombre:</label>
-  <input type="text" id="nombre" required>
-
-  <label>Teléfono:</label>
-  <input type="text" id="telefono" required>
-
-  <label>Servicio:</label>
-  <select id="servicio" required>
-    <option value="">Seleccione...</option>
-    <option value="Corte sin barba">Corte sin barba</option>
-    <option value="Corte con barba">Corte con barba</option>
-    <option value="Barba sola">Barba sola</option>
-    <option value="Tinte">Tinte</option>
-    <option value="Peinado">Peinado</option>
-  </select>
-
-  <label>Precio:</label>
-  <input type="text" id="precio" readonly>
-
-  <label>Fecha:</label>
-  <input type="date" id="fecha" required>
-
-  <div id="listaHorarios"></div>
-
-  <button type="submit">Agendar cita</button>
-</form>
-
-<script>
-const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwOA0C-kiRTRTHWOqcPrCSFZJyCV7cXY9Kvcf2FCGFn_vnyL24NRYKna-HHM5jvtMY/exec";
-
-const precios = {
-  "Corte sin barba": 10,
-  "Corte con barba": 18,
-  "Barba sola": 8,
-  "Tinte": 15,
-  "Peinado": 12
-};
-
-let horaSeleccionada = "";
-
-// === Actualizar precio según servicio ===
-document.getElementById("servicio").addEventListener("change", () => {
-  const servicio = document.getElementById("servicio").value;
-  document.getElementById("precio").value = precios[servicio] || "";
-});
-
-// === Mostrar horarios ===
-document.getElementById("fecha").addEventListener("change", async () => {
-  const fecha = document.getElementById("fecha").value;
-  if (!fecha) return;
-
-  const res = await fetch(`${URL_SCRIPT}?action=getHorarios&fecha=${fecha}`);
-  const ocupados = await res.json();
-
-  const lista = document.getElementById("listaHorarios");
-  lista.innerHTML = "<h3>Horarios disponibles:</h3>";
-
-  const start = 8;
-  const end = 22;
-
-  for (let h = start; h < end; h++) {
-    for (let m of [0, 30]) {
-      const hora = `${String(h).padStart(2, "0")}:${m === 0 ? "00" : "30"}`;
-      const ocupado = ocupados.includes(hora);
-      const div = document.createElement("div");
-      div.className = `horario ${ocupado ? "ocupado" : "libre"}`;
-      div.textContent = `${hora} — ${ocupado ? "Ocupado" : "Libre"}`;
-      if (!ocupado) {
-        div.addEventListener("click", () => seleccionarHora(hora, div));
-      }
-      lista.appendChild(div);
-    }
-  }
-});
-
-// === Seleccionar hora libre ===
-function seleccionarHora(hora, div) {
-  horaSeleccionada = hora;
-  document.querySelectorAll('.libre').forEach(el => el.style.border = '1px solid #ddd');
-  div.style.border = '2px solid green';
-}
-
-// === Enviar formulario ===
-document.getElementById("formCita").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  if (!horaSeleccionada) return alert("Selecciona un horario libre");
-
-  const datos = {
-    nombre: document.getElementById("nombre").value,
-    telefono: document.getElementById("telefono").value,
-    servicio: document.getElementById("servicio").value,
-    fecha: document.getElementById("fecha").value,
-    hora: horaSeleccionada,
-    precio: document.getElementById("precio").value
+  // 💈 Lista de precios
+  const precios = {
+    "Corte sin barba": 10,
+    "Corte con barba": 18,
+    "Barba sola": 8,
+    "Tinte": 15,
+    "Peinado": 12,
   };
 
-  await fetch(URL_SCRIPT, {
-    method: "POST",
-    body: JSON.stringify(datos),
-    headers: { "Content-Type": "application/json" }
+  let horaSeleccionada = "";
+
+  // === Actualiza el precio según el servicio ===
+  document.getElementById("servicio").addEventListener("change", () => {
+    const servicio = document.getElementById("servicio").value;
+    document.getElementById("precio").value = precios[servicio] || "";
   });
 
-  alert("✅ Cita agendada con éxito!");
-  document.getElementById("formCita").reset();
-  document.getElementById("listaHorarios").innerHTML = "";
-});
-</script>
+  // === Carga los horarios disponibles desde Supabase ===
+  document.getElementById("fecha").addEventListener("change", async () => {
+    const fecha = document.getElementById("fecha").value;
+    if (!fecha) return;
 
-</body>
-</html>
+    // Consulta las citas que ya existen en esa fecha
+    const { data: citas, error } = await supabase
+      .from("citas")
+      .select("hora")
+      .eq("fecha", fecha);
+
+    if (error) {
+      console.error("Error al cargar horarios:", error);
+      alert("Error al cargar los horarios.");
+      return;
+    }
+
+    const ocupados = citas.map((c) => c.hora);
+    const lista = document.getElementById("listaHorarios");
+    lista.innerHTML = "<h3>Horarios disponibles:</h3>";
+
+    for (let h = 8; h < 22; h++) {
+      for (let m of [0, 30]) {
+        const hora = `${String(h).padStart(2, "0")}:${m === 0 ? "00" : "30"}`;
+        const ocupado = ocupados.includes(hora);
+        const div = document.createElement("div");
+        div.className = `horario ${ocupado ? "ocupado" : "libre"}`;
+        div.textContent = `${hora} — ${ocupado ? "Ocupado" : "Libre"}`;
+        if (!ocupado) {
+          div.addEventListener("click", () => seleccionarHora(hora, div));
+        }
+        lista.appendChild(div);
+      }
+    }
+  });
+
+  // === Seleccionar hora libre ===
+  function seleccionarHora(hora, div) {
+    horaSeleccionada = hora;
+    document
+      .querySelectorAll(".libre")
+      .forEach((el) => (el.style.border = "1px solid #ddd"));
+    div.style.border = "2px solid green";
+  }
+
+  // === Guardar cita en Supabase ===
+  const form = document.getElementById("formCita");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!horaSeleccionada) return alert("Selecciona un horario libre");
+
+    const datos = {
+      nombre: document.getElementById("nombre").value,
+      telefono: document.getElementById("telefono").value,
+      servicio: document.getElementById("servicio").value,
+      fecha: document.getElementById("fecha").value,
+      hora: horaSeleccionada,
+      precio: parseFloat(document.getElementById("precio").value || 0),
+    };
+
+    const { error } = await supabase.from("citas").insert([datos]);
+
+    if (error) {
+      console.error("❌ Error al guardar cita:", error);
+      alert("❌ Error al guardar la cita. Revisa la consola.");
+    } else {
+      alert("✅ Cita agendada con éxito!");
+      form.reset();
+      document.getElementById("listaHorarios").innerHTML = "";
+    }
+  });
+</script>
