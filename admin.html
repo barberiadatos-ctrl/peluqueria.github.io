@@ -1,37 +1,126 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panel del Peluquero</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel del Peluquero 💈</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 30px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+      color: #222;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #007bff;
+      color: white;
+    }
+    tr:hover {
+      background: #f0f8ff;
+    }
+    .recargar {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 15px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<body>
-  <header class="header">
-    <h1>Panel del Peluquero 💇‍♂️</h1>
-    <nav>
-      <a href="index.html">Inicio</a>
-      <a href="agendar.html">Agendar</a>
-    </nav>
-  </header>
 
-  <main>
-    <h2>Citas agendadas</h2>
-    <table class="tabla">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Teléfono</th>
-          <th>Servicio</th>
-          <th>Fecha</th>
-          <th>Hora</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody id="tablaCitas">
-        <tr><td colspan="6">Aún no hay citas registradas</td></tr>
-      </tbody>
-    </table>
-  </main>
+<body>
+  <h1>📋 Citas Agendadas</h1>
+
+  <button class="recargar" id="btnRecargar">🔄 Actualizar lista</button>
+
+  <table id="tablaCitas">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Teléfono</th>
+        <th>Servicio</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Precio</th>
+      </tr>
+    </thead>
+    <tbody id="tbodyCitas">
+      <tr><td colspan="6">Cargando citas...</td></tr>
+    </tbody>
+  </table>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const SUPABASE_URL = "https://vukawliizqcjhptpyxdi.supabase.co";
+    const SUPABASE_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1a2F3bGlpenFjamhwdHB5eGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMTEwMzksImV4cCI6MjA3Njg4NzAzOX0.XhH_NEwxiEaYqS4vZiWm4DjSXQ1bLZkMtdB0g8ewNtM";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const tbody = document.getElementById("tbodyCitas");
+    const btnRecargar = document.getElementById("btnRecargar");
+
+    // 🔁 Función para cargar las citas desde Supabase
+    async function cargarCitas() {
+      tbody.innerHTML = "<tr><td colspan='6'>Cargando...</td></tr>";
+
+      const { data: citas, error } = await supabase
+        .from("citas")
+        .select("*")
+        .order("fecha", { ascending: true })
+        .order("hora", { ascending: true });
+
+      if (error) {
+        console.error("Error al cargar citas:", error);
+        tbody.innerHTML = "<tr><td colspan='6'>❌ Error al cargar citas</td></tr>";
+        return;
+      }
+
+      if (!citas.length) {
+        tbody.innerHTML = "<tr><td colspan='6'>No hay citas agendadas</td></tr>";
+        return;
+      }
+
+      tbody.innerHTML = "";
+      citas.forEach((cita) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${cita.nombre}</td>
+          <td>${cita.telefono}</td>
+          <td>${cita.servicio}</td>
+          <td>${cita.fecha}</td>
+          <td>${cita.hora}</td>
+          <td>$${cita.precio}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Cargar citas al abrir la página
+    cargarCitas();
+
+    // Recargar manualmente
+    btnRecargar.addEventListener("click", cargarCitas);
+  </script>
 </body>
 </html>
