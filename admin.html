@@ -4,53 +4,106 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel del Peluquero 💈</title>
+
   <style>
+    /* === ESTILOS BASE === */
     body {
       font-family: "Poppins", sans-serif;
-      margin: 30px;
-      background: #f5f5f5;
+      background: #0e0e0e;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
+
     h1 {
-      text-align: center;
-      color: #222;
+      color: #d4af37; /* dorado */
+      margin-top: 40px;
+      font-size: 2rem;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+      letter-spacing: 1px;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
+
+    /* === BOTÓN DE ACTUALIZAR === */
+    .recargar {
+      margin: 20px 0;
+      padding: 10px 25px;
+      font-size: 1rem;
+      color: #000;
+      background: linear-gradient(90deg, #d4af37, #f5d76e);
+      border: none;
       border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
     }
-    th, td {
+
+    .recargar:hover {
+      background: linear-gradient(90deg, #f5d76e, #d4af37);
+      transform: scale(1.05);
+    }
+
+    /* === TABLA DE CITAS === */
+    table {
+      width: 90%;
+      max-width: 1100px;
+      border-collapse: collapse;
+      background: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+      margin-bottom: 40px;
+    }
+
+    thead {
+      background: linear-gradient(90deg, #d4af37, #b88a1e);
+    }
+
+    th {
+      color: #000;
+      padding: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: bold;
+    }
+
+    td {
       padding: 12px;
       text-align: center;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-    th {
-      background: #007bff;
-      color: white;
-    }
+
     tr:hover {
-      background: #f0f8ff;
+      background: rgba(212, 175, 55, 0.08);
+      transition: 0.2s;
     }
-    .recargar {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 15px;
-      background: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+
+    /* === PIE DE PÁGINA === */
+    footer {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    /* === CELULAR === */
+    @media (max-width: 700px) {
+      table {
+        font-size: 0.85rem;
+      }
+      th, td {
+        padding: 8px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <h1>📋 Citas Agendadas</h1>
+  <h1>📋 Panel del Peluquero</h1>
 
-  <button class="recargar" id="btnRecargar">🔄 Actualizar lista</button>
+  <button class="recargar" id="btnRecargar">🔄 Actualizar citas</button>
 
   <table id="tablaCitas">
     <thead>
@@ -68,6 +121,8 @@
     </tbody>
   </table>
 
+  <footer>💈 Estilo Dorado Barber — Panel de administración</footer>
+
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -80,7 +135,6 @@
     const tbody = document.getElementById("tbodyCitas");
     const btnRecargar = document.getElementById("btnRecargar");
 
-    // 🔁 Función para cargar las citas desde Supabase
     async function cargarCitas() {
       tbody.innerHTML = "<tr><td colspan='6'>Cargando...</td></tr>";
 
@@ -116,10 +170,7 @@
       });
     }
 
-    // Cargar citas al abrir la página
     cargarCitas();
-
-    // Recargar manualmente
     btnRecargar.addEventListener("click", cargarCitas);
   </script>
 </body>
