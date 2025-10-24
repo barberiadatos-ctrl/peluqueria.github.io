@@ -140,11 +140,10 @@
       <label for="servicio">Servicio</label>
       <select id="servicio" required>
         <option value="">Seleccione un servicio</option>
-        <option value="Corte sin barba">Corte sin barba</option>
-        <option value="Corte con barba">Corte con barba</option>
-        <option value="Barba sola">Barba sola</option>
-        <option value="Tinte">Tinte</option>
-        <option value="Peinado">Peinado</option>
+        <option value="Corte de niño">Corte de niño</option>
+        <option value="Corte de caballero">Corte de caballero</option>
+        <option value="Corte de cabello, Barba">Corte de cabello, Barba</option>
+        <option value="Corte de cabello, Barba, Cejas">Corte de cabello, Barba, Cejas</option>
       </select>
 
       <label for="precio">Precio</label>
@@ -172,11 +171,10 @@
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const precios = {
-      "Corte sin barba": 10,
-      "Corte con barba": 18,
-      "Barba sola": 8,
-      "Tinte": 15,
-      "Peinado": 12,
+      "Corte de niño": 14000,
+      "Corte de caballero": 16000,
+      "Corte de cabello, Barba": 20000,
+      "Corte de cabello, Barba, Cejas": 25.000
     };
 
     let horaSeleccionada = "";
